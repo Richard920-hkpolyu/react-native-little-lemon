@@ -8,41 +8,32 @@ import {Heading} from "../../components/ui/heading";
 import {Box} from "../../components/ui/box";
 import {Button, ButtonText} from "../../components/ui/button";
 import { Stack } from "expo-router";
-import { listProducts } from "../../api/products";
+import { fetchProductById, listProducts } from "../../api/products";
+import { useQuery } from "@tanstack/react-query";
+import { ActivityIndicator } from "react-native";
 
 export default function ProductDetailsScreen() {
-  const [products, setProducts] = useState([]); // Initialize as empty array
-  const [loading, setLoading] = useState(true); // Add loading state
+
   const {id} = useLocalSearchParams();
-  
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await listProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
+  const {
+    data:product,//rename data to product
+    isLoading,
+    error,
+  }=useQuery({
+    queryKey:['products','id'], //the combination make key unique, cache reusable
+    queryFn:()=>fetchProductById(Number(id)),
+  });
 
-  // Show loading state while data is being fetched
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  // Find the product only after data is loaded
-  const product = products.find(product => product.id === Number(id));
-  
-  if (!product) {
-    return <Text>Product Not Found</Text>;
-  }
+  if(isLoading){
+      return <ActivityIndicator/>
+    }
+    if(error){
+      return <Text>Product not found!</Text>
+    }
 
   return (
-    <Card className="p-5 rounded-lg flex-1 max-w-[960px] mx-auto">
+    <Card className="p-5 rounded-lg max-w-[360px] mx-auto flex-1">
+      {/* rename the title after routing to product details */}
       <Stack.Screen options={{title: product.name}}/>
       {/* Product Image */}
       <Image

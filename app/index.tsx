@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native";
-//import products from "../assets/products.json";
+import React from "react";
+import { ActivityIndicator, FlatList } from "react-native";
 import ProductListItem from "../components/ProductListItem";
-
+import {Text} from "../components/ui/text";
 import {useBreakpointValue} from "../components/ui/utils/use-break-point-value";
 import { listProducts } from "../api/products";
+import { useQuery } from "@tanstack/react-query";
 const HomeScreen = () => {
+  const {data,isLoading,error} = useQuery({
+    queryKey:['products'],
+    queryFn:listProducts,
+  })
 
-  const [products, setProducts] = useState();
-
-    const numColumns = useBreakpointValue({
+  const numColumns = useBreakpointValue({
         default:2,
         sm:3,
-    });
+  });
 
-    useEffect(() =>{
-      const fetchProducts = async ()=>{
-        const data = await listProducts();
-        setProducts(data);
-      }
-        fetchProducts();
-    },[]);
-
+  if(isLoading){
+    return <ActivityIndicator/>
+  }
+  if(error){
+    return <Text>Error fetching products</Text>
+  }
 
   return (
     <FlatList
-        key={Number(numColumns)}
-      data={products}
+      key={Number(numColumns)}
+      data={data}
       keyExtractor={(item) => item.id.toString()}
       numColumns={Number(numColumns)}
       contentContainerStyle={{ gap: 8 }}
@@ -38,3 +38,23 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
+
+
+
+
+  // const [products, setProducts] = useState();
+  // const [loading, setLoading] = useState(true);
+
+    // useEffect(() => {
+    //     const fetchProducts = async () => {
+    //       try {
+    //         const data = await listProducts();
+    //         setProducts(data);
+    //       } catch (error) {
+    //         console.error("Error fetching products:", error);
+    //       } finally {
+    //         setLoading(false);
+    //       }
+    //     };
+    //     fetchProducts();
+    //   }, []);
