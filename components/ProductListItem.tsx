@@ -8,11 +8,12 @@ import {Box} from "../components/ui/box";
 import {Button, ButtonText} from "../components/ui/button";
 import { Link } from "expo-router";
 
+
 const ProductListItem = ({ product }) => {
   const { id, name, description, image, price } = product;
 
   return (
-    <Card className="p-5 rounded-lg max-w-[360px] flex-1">
+    <Card className="p-5 rounded-lg max-w-[360px] mx-auto flex-1">
       {/* Product Image */}
       <Link href={`product/${id}`}>
         <Image
@@ -32,7 +33,7 @@ const ProductListItem = ({ product }) => {
         <Heading size="md" className="mb-4">
           ${price}
         </Heading>
-        <Text size="sm" numberOfLines={2}>
+        <Text size="sm">
           {description}
         </Text>
       </VStack>
