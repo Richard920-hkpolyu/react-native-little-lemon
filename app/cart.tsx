@@ -5,15 +5,38 @@ import { useCart } from '@/store/cartStore';
 import { FlatList } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Redirect } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
+import { createOrder } from '@/api/orders';
 
 
 export default function CartScreen() {
     const items = useCart((state) => state.items);
     const resetCart = useCart((state) => state.resetCart);
+
+    const createOrderMutation = useMutation({
+    mutationFn: () =>
+      createOrder(
+        items.map((item) => ({
+          productId: item.product.id,//item.product refer to specific product detail
+          quantity: item.quantity,//////////default 1
+          price: item.product.price, // MANAGE FORM SERVER SIDE
+        }))
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+      //paymentIntentMutation.mutate({ orderId: data.id });
+      resetCart();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
     const onCheckout = async () => {
+        createOrderMutation.mutate();
         //send order to server
         // openPaymentSheet();
-        resetCart();
+        
     };
     if (items.length === 0) {
         return <Redirect href={'/'} />;

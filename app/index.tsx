@@ -4,7 +4,7 @@ import ProductListItem from "../components/ProductListItem";
 import {Text} from "../components/ui/text";
 import {useBreakpointValue} from "../components/ui/utils/use-break-point-value";
 import { listProducts } from "../api/products";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query"; //get data
 const HomeScreen = () => {
   const {data,isLoading,error} = useQuery({
     queryKey:['products'],

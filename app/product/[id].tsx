@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {Card} from "../../components/ui/card";
 import {Image} from "../../components/ui/image";
 import {Text} from "../../components/ui/text";
@@ -8,8 +8,8 @@ import {Heading} from "../../components/ui/heading";
 import {Box} from "../../components/ui/box";
 import {Button, ButtonText} from "../../components/ui/button";
 import { Stack } from "expo-router";
-import { fetchProductById, listProducts } from "../../api/products";
-import { useQuery } from "@tanstack/react-query";
+import { fetchProductById } from "../../api/products";
+import { useQuery } from "@tanstack/react-query";//cache...
 import { ActivityIndicator } from "react-native";
 import { useCart } from "@/store/cartStore";
 
