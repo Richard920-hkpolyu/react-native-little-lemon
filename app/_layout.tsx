@@ -29,7 +29,7 @@ export default function RootLayout() {
 
                 }}>
                     <Stack.Screen name="index" options={{
-                        title: 'Shop', headerLeft: () => !isLoggedIn && (
+                        title: 'Little Lemon Restaurant', headerLeft: () => !isLoggedIn && (
                             <Link href={'/login'} asChild>{/*why asChild?*/}
                                 <Pressable className="flex-row gap-2">
                                     <Icon as={User} />

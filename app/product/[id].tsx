@@ -1,58 +1,59 @@
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import {Card} from "../../components/ui/card";
-import {Image} from "../../components/ui/image";
-import {Text} from "../../components/ui/text";
-import {VStack} from "../../components/ui/vstack";
-import {Heading} from "../../components/ui/heading";
-import {Box} from "../../components/ui/box";
-import {Button, ButtonText} from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Image } from "../../components/ui/image";
+import { Text } from "../../components/ui/text";
+import { VStack } from "../../components/ui/vstack";
+import { Heading } from "../../components/ui/heading";
+import { Box } from "../../components/ui/box";
+import { Button, ButtonText } from "../../components/ui/button";
 import { Stack } from "expo-router";
 import { fetchProductById } from "../../api/products";
 import { useQuery } from "@tanstack/react-query";//cache...
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useCart } from "@/store/cartStore";
 
 export default function ProductDetailsScreen() {
 
-  const {id} = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
 
-  const addProduct = useCart((state)=>state.addProduct);
+  const addProduct = useCart((state) => state.addProduct);
   //const cartItems = useCart((state)=>state.items);
-  
+
   const {
-    data:product,//rename data to product
+    data: product,//rename data to product
     isLoading,
     error,
-  }=useQuery({
-    queryKey:['products','id'], //the combination make key unique, cache reusable
-    queryFn:()=>fetchProductById(Number(id)),
+  } = useQuery({
+    queryKey: ['product', id], //the combination make key unique, cache reusable
+    queryFn: () => fetchProductById(Number(id)),
   });
 
 
-  const addToCart =()=>{
+  const addToCart = () => {
     addProduct(product);
   }
 
-  if(isLoading){
-      return <ActivityIndicator/>
-    }
-    if(error){
-      return <Text>Product not found!</Text>
-    }
+  if (isLoading) {
+    return <ActivityIndicator />
+  }
+  if (error) {
+    return <Text>Product not found!</Text>
+  }
 
   return (
     <Card className="p-5 rounded-lg max-w-[360px] mx-auto flex-1">
       {/* rename the title after routing to product details */}
-      <Stack.Screen options={{title: product.name}}/>
+      <Stack.Screen options={{ title: product.name }} />
       {/* Product Image */}
-      <Image
-        source={{ uri: product.image }}
-        className="mb-6 h-[240px] w-full rounded-md"
-        alt={`${product.name} image`}
-        resizeMode="contain"
-      />
-
+      <View>
+        <Image
+          source={{ uri: product.image }}
+          className="mb-6 h-[240px] w-full rounded-md"
+          alt={`${product.name} image`}
+          resizeMode="contain"
+        />
+      </View>
       {/* Product Info */}
       <Text className="text-sm font-normal mb-2 text-typography-700">
         {product.name}
